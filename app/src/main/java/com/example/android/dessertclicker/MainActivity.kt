@@ -18,6 +18,8 @@ package com.example.android.dessertclicker
 
 import android.content.ActivityNotFoundException
 import android.os.Bundle
+import android.os.PersistableBundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -25,12 +27,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
 import androidx.databinding.DataBindingUtil
 import com.example.android.dessertclicker.databinding.ActivityMainBinding
-
+const val TAG = "MainActivity"
+const val KEY_REVENUE = "revenue_key"
+const val KEY_DESSERT_SOLD = "dessert_sold_key"
 class MainActivity : AppCompatActivity() {
 
     private var revenue = 0
     private var dessertsSold = 0
-
     // Contains all the views
     private lateinit var binding: ActivityMainBinding
 
@@ -63,9 +66,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG,"OnCreate Called")
         // Use Data Binding to get reference to the views
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-
+        if(savedInstanceState != null) {
+            revenue = savedInstanceState.getInt(KEY_REVENUE, 0)
+            dessertsSold = savedInstanceState.getInt(KEY_DESSERT_SOLD, 0)
+            showCurrentDessert()
+        }
         binding.dessertButton.setOnClickListener {
             onDessertClicked()
         }
@@ -76,6 +84,43 @@ class MainActivity : AppCompatActivity() {
 
         // Make sure the correct dessert is showing
         binding.dessertButton.setImageResource(currentDessert.imageId)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "OnStart Called")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "OnResume Called")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "OnStop Called")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "OnPause Called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG,"OnDestroy Called")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d(TAG,"OnRestart Called")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        outState.putInt(KEY_REVENUE, revenue)
+        outState.putInt(KEY_DESSERT_SOLD, dessertsSold)
+        super.onSaveInstanceState(outState, outPersistentState)
+        Log.d(TAG,"OnSaveInstanceState Called")
     }
 
     /**
